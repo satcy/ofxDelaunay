@@ -81,6 +81,34 @@ int ofxDelaunay::triangulate(){
 	return ntri;
 }
 
+int ofxDelaunay::triangulateSplited(){
+    
+    int nv = vertices.size();
+    //add 3 emptly slots, required by the Triangulate call
+    vertices.push_back(XYZ());
+    vertices.push_back(XYZ());
+    vertices.push_back(XYZ());
+    
+    //allocate space for triangle indices
+    triangles.resize(3*nv);
+    
+    int ntri;
+    qsort( &vertices[0], vertices.size()-3, sizeof( XYZ ), XYZCompare );
+    Triangulate( nv, &vertices[0], &triangles[0], ntri );
+    
+    // copy triangle data to ofxDelaunayTriangle.
+    triangleMesh.clear();
+    
+    for (int i = 0; i < ntri; i++){
+        triangleMesh.addVertex(ofVec3f(vertices[triangles[ i ].p1].x, vertices[triangles[ i ].p1].y, vertices[triangles[ i ].p1].z ));
+        triangleMesh.addVertex(ofVec3f(vertices[triangles[ i ].p2].x, vertices[triangles[ i ].p2].y, vertices[triangles[ i ].p2].z ));
+        triangleMesh.addVertex(ofVec3f(vertices[triangles[ i ].p3].x, vertices[triangles[ i ].p3].y, vertices[triangles[ i ].p3].z ));
+    }
+    
+    
+    return ntri;
+}
+
 void ofxDelaunay::draw(){
 	if(ofGetStyle().bFill){
 	    triangleMesh.draw();

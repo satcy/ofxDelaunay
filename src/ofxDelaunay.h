@@ -28,6 +28,7 @@ public:
 	int addPoints( vector<ofPoint>& points );
 	
 	int  triangulate();
+    int  triangulateSplited();
 	void draw();
 	
     ofMesh triangleMesh;
